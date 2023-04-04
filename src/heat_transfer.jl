@@ -1,3 +1,5 @@
+export heat_transfer
+
 """
     heat_transfer(f::Fluid, t::Tube)
 

@@ -1,9 +1,14 @@
 module HeatTransferFluids
 
-include("dimensions.jl")
-include("fluids.jl")
-include("structures.jl")
-include("numbers.jl")
+using Unitful
+
+@derived_dimension SpecificHeatCapacity dimension(u"J/(kg*K)")
+@derived_dimension ThermalConductivity dimension(u"W/(m*K)")
+@derived_dimension VolumeFlow dimension(u"m^3/s")
+
+include("fluid.jl")
+include("structure.jl")
+include("flow.jl")
 include("pressure_drop.jl")
 include("heat_transfer.jl")
 

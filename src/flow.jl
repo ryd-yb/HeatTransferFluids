@@ -1,4 +1,4 @@
-export reynolds_number, nusselt_number, prandtl_number
+export reynolds_number, nusselt_number, prandtl_number, criticality
 
 """
     reynolds_number(f::Flow)

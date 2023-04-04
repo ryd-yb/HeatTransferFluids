@@ -6,7 +6,7 @@ export pressure_drop
 The pressure drop of a fluid flowing inside a tube due to drag of the fluid along the tube's boundary.
 """
 # VDI Heat Atlas, p. 1057
-function pressure_drop(f::Fluid; t::Tube, friction=nothing)
+function pressure_drop(f::Fluid, t::Tube; friction = nothing)
     Re = reynolds_number(f, t)
     L = t.length
     d = t.diameter
@@ -29,9 +29,9 @@ The pressure drop of a fluid flowing inside a coiled tube.
 In addition to friction, a fluid experiences centrifugal forces due to the coiling of the tube.
 """
 # VDI Heat Atlas, p. 1062 to 1063
-function pressure_drop(f::Fluid; c::Coil)
-    Dw = ct.diameter
-    H = ct.pitch
+function pressure_drop(f::Fluid, c::Coil)
+    Dw = c.diameter
+    H = c.pitch
     D = Dw * (1 + (H / (π * Dw))^2)
     d = c.tube.diameter
     Re = reynolds_number(f, c.tube)
@@ -42,7 +42,7 @@ function pressure_drop(f::Fluid; c::Coil)
         ξ = (0.3164 / Re^(1 / 4)) * (1 + 0.095sqrt(d / D) * Re^(1 / 4))
     end
 
-    return pressure_drop_tube(f, ct.tube, friction=ξ)
+    return pressure_drop(f, c.tube, friction = ξ)
 end
 
 """
@@ -51,9 +51,9 @@ end
 The pressure drop of a fluid flowing through an flow element characterized by a flow factor, e.g., valve.
 """
 # https://en.wikipedia.org/wiki/Flow_coefficient
-function pressure_drop(f::Fluid; flow_rate::VolumeFlow, flow_factor::VolumeFlow)
-    Q = uconvert(u"m^3/hr", flow_rate)
-    Kv = uconvert(u"m^3/hr", flow_factor)
+function pressure_drop(f::Fluid, v::Valve)
+    Q = uconvert(u"m^3/hr", v.flow_rate)
+    Kv = uconvert(u"m^3/hr", v.flow_factor)
 
     ρ = f.density
     ρ₀ = 1000u"kg/m^3"
