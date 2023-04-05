@@ -1,11 +1,22 @@
 export pressure_drop
 
 """
-    pressure_drop(fluid, tube[; friction])
+    pressure_drop(f::Fluid, t::Tube[; friction])
 
 Computes the pressure drop of a `fluid` flowing through a `tube` with a particular `friction`.
+
+See VDI Heat Atlas, p. 1057 for details.
+
+# Arguments
+- `f::Fluid`: the fluid flowing through the tube
+- `t::Tube`: the tube through which the fluid flows
+
+# Keywords
+- `friction::Float`: the friction factor of the fluid flowing through the tube
+
+# Returns
+- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
 """
-# VDI Heat Atlas, p. 1057
 function pressure_drop(f::Fluid, t::Tube; friction = nothing)
     Re = reynolds_number(f, t)
     L = t.length
@@ -23,11 +34,19 @@ function pressure_drop(f::Fluid, t::Tube; friction = nothing)
 end
 
 """
-    pressure_drop(fluid, coil)
+    pressure_drop(f::Fluid, c::Coil)
 
 Computes the pressure drop of a `fluid` flowing through a coiled tube.
+
+See VDI Heat Atlas, p. 1062 to 1063 for details.
+
+# Arguments
+- `f::Fluid`: the fluid flowing through the tube
+- `c::Coil`: the coiled tube through which the fluid flows
+
+# Returns
+- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
 """
-# VDI Heat Atlas, p. 1062 to 1063
 function pressure_drop(f::Fluid, c::Coil)
     Dw = c.diameter
     H = c.pitch
@@ -45,9 +64,16 @@ function pressure_drop(f::Fluid, c::Coil)
 end
 
 """
-    pressure_drop(fluid, valve)
+    pressure_drop(f::Fluid, v::Valve)
 
 Computes the pressure drop of a `fluid` flowing through a `valve`.
+
+# Arguments
+- `f::Fluid`: the fluid flowing through the tube
+- `v::Valve`: the valve through which the fluid flows
+
+# Returns
+- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
 """
 # https://en.wikipedia.org/wiki/Flow_coefficient
 function pressure_drop(f::Fluid, v::Valve)
