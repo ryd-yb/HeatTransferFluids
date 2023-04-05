@@ -1,9 +1,9 @@
 export heat_transfer
 
 """
-    heat_transfer(f::Fluid, t::Tube)
+    heat_transfer(fluid, tube)
 
-The heat transfer coefficient of a fluid flowing inside a tube.
+Computes the heat transfer coefficient of a `fluid`` flowing through a `tube`.
 """
 function heat_transfer(f::Fluid, t::Tube)
     k = f.thermal_conductivity

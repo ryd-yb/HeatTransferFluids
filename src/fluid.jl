@@ -2,8 +2,6 @@ export Fluid, Water
 
 """
     Fluid
-
-A fluid with a density, velocity, viscosity, heat capacity, thermal conductivity, and temperature.
 """
 struct Fluid{
     T1<:Unitful.Density,

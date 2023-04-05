@@ -1,9 +1,9 @@
 export pressure_drop
 
 """
-    pressure_drop(f::Fluid; t::Tube, friction = nothing)
+    pressure_drop(fluid, tube[; friction])
 
-The pressure drop of a fluid flowing inside a tube due to drag of the fluid along the tube's boundary.
+Computes the pressure drop of a `fluid` flowing through a `tube` with a particular `friction`.
 """
 # VDI Heat Atlas, p. 1057
 function pressure_drop(f::Fluid, t::Tube; friction = nothing)
@@ -23,10 +23,9 @@ function pressure_drop(f::Fluid, t::Tube; friction = nothing)
 end
 
 """
-    pressure_drop(f::Fluid, c::CoiledTube)
+    pressure_drop(fluid, coil)
 
-The pressure drop of a fluid flowing inside a coiled tube.
-In addition to friction, a fluid experiences centrifugal forces due to the coiling of the tube.
+Computes the pressure drop of a `fluid` flowing through a coiled tube.
 """
 # VDI Heat Atlas, p. 1062 to 1063
 function pressure_drop(f::Fluid, c::Coil)
@@ -46,9 +45,9 @@ function pressure_drop(f::Fluid, c::Coil)
 end
 
 """
-    pressure_drop(f::Fluid; flow_rate::VolumeFlow, flow_factor::VolumeFlow)
+    pressure_drop(fluid, valve)
 
-The pressure drop of a fluid flowing through an flow element characterized by a flow factor, e.g., valve.
+Computes the pressure drop of a `fluid` flowing through a `valve`.
 """
 # https://en.wikipedia.org/wiki/Flow_coefficient
 function pressure_drop(f::Fluid, v::Valve)
