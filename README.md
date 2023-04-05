@@ -27,8 +27,8 @@ Pluto.run()
 ```
 
 
-[CI-img]: https://github.com/ryd-yb/HeatTransferFluids.jl/actions/workflows/ci.yml/badge.svg
-[CI-url]: https://github.com/ryd-yb/HeatTransferFluids.jl/actions/workflows/ci.yml
+[CI-img]: https://github.com/ryd-yb/HeatTransferFluids.jl/actions/workflows/CI.yml/badge.svg
+[CI-url]: https://github.com/ryd-yb/HeatTransferFluids.jl/actions/workflows/CI.yml
 
 [codecov-img]:  https://codecov.io/gh/ryd-yb/HeatTransferFluids.jl/branch/main/graph/badge.svg?token=CNF55N4HDZ
 [codecov-url]: https://codecov.io/gh/ryd-yb/HeatTransferFluids.jl
