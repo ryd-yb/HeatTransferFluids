@@ -1,7 +1,5 @@
 # HeatTransferFluids.jl
 
-# Coils.jl
-
 | **Build Status**                          | **Code Coverage**               |
 |:-----------------------------------------:|:-------------------------------:|
 | [![][CI-img]][CI-url] | [![][codecov-img]][codecov-url] |
@@ -18,13 +16,7 @@ Pkg.add("https://github.com/ryd-yb/HeatTransferFluids.jl")
 
 ## Usage
 
-See the notebooks in `example`:
-
-```julia
-using Pluto
-
-Pluto.run()
-```
+See the tests in `test`.
 
 
 [CI-img]: https://github.com/ryd-yb/HeatTransferFluids.jl/actions/workflows/CI.yml/badge.svg
