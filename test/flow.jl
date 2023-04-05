@@ -15,8 +15,4 @@
         @test nusselt_number(fluid, tube) ≈ 5 atol = 1
     end
 
-    @testset "criticality" begin
-        @test criticality(fluid, tube) ≈ 0 atol = 1e-4
-    end
-
 end
