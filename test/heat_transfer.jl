@@ -1,6 +1,6 @@
 @testset "heat_transfer" begin
 
-    fluid = Water(velocity = 3u"m/s", temperature = 20u"°C")
+    fluid = Water(velocity = 3u"m/s", temperature = 293.15u"K")
     tube = Tube(diameter = 2.7u"mm", length = 14u"m")
     #coil = Coil(tube; diameter = 95u"mm", pitch = 5.2u"mm")
 

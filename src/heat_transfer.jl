@@ -10,7 +10,7 @@ Computes the heat transfer coefficient of a `fluid`` flowing through a `tube`.
 - `t::Tube`: the tube through which the fluid flows
 
 # Returns
-- `Unitful.Quantity`: the heat transfer coefficient of the fluid flowing through the tube
+- `DynamicQuantity.AbstractQuantity`: the heat transfer coefficient of the fluid flowing through the tube
 """
 function heat_transfer(f::Fluid, t::Tube)
     k = f.thermal_conductivity

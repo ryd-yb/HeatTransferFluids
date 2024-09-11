@@ -1,14 +1,14 @@
 name = "HeatTransferFluids"
 uuid = "44505bb3-94ea-493c-a20c-f0ca548ab76b"
 authors = ["Bodo Kaiser"]
-version = "0.0.1"
+version = "0.1.0"
 
 [deps]
-Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+DynamicQuantities = "06fc5a27-2a28-4c7c-a15d-362465fb6821"
 
 [compat]
 julia = "1"
-Unitful = "1.12"
+DynamicQuantities = "1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

@@ -1,6 +1,6 @@
 using HeatTransferFluids
 using Test
-using Unitful
+using DynamicQuantities
 
 include("fluid.jl")
 include("structure.jl")

@@ -1,6 +1,6 @@
 @testset "Flow" begin
 
-    fluid = Water(velocity = 0.58u"m/s", temperature = 20u"°C")
+    fluid = Water(velocity = 0.58u"m/s", temperature = 293.15u"K")
     tube = Tube(diameter = 2.7u"mm", length = 9.5153u"m")
 
     @testset "reynolds_number" begin

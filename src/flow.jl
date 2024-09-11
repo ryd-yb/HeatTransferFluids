@@ -18,7 +18,7 @@ function reynolds_number(f::Fluid, t::Tube)
     μ = f.viscosity
     D = t.diameter
 
-    return upreferred(ϱ * v * D / μ)
+    return ustrip(ϱ * v * D / μ)
 end
 
 """
@@ -37,7 +37,7 @@ function prandtl_number(f::Fluid)
     μ = f.viscosity
     k = f.thermal_conductivity
 
-    return c * μ / k
+    return ustrip(c * μ / k)
 end
 
 """

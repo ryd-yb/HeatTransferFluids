@@ -1,4 +1,4 @@
-export Structure, Tube, Coil, Valve
+export Structure, Tube, Helix, Valve
 
 """
     Structure
@@ -8,90 +8,69 @@ A structure is an element through which a fluid flows.
 abstract type Structure end
 
 """
-    Tube
+    Tube{T<:AbstractQuantity}
 
 A tube with a diameter and length through which a fluid flows.
 
 # Fields
-- `diameter::Unitful.Length`: the diameter of the tube
-- `length::Unitful.Length`: the length of the tube
+- `diameter::T`: the diameter of the tube
+- `length::T`: the length of the tube
 """
-struct Tube{T1<:Unitful.Length,T2<:Unitful.Length} <: Structure
-    diameter::T1
-    length::T2
+struct Tube{T<:AbstractQuantity} <: Structure
+    diameter::T
+    length::T
+
+    function Tube(; diameter::T, length::T) where {T}
+        @assert dimension(diameter) == dimension(u"m") "diameter must have units of length"
+        @assert dimension(length) == dimension(u"m") "length must have units of length"
+        @assert ustrip(diameter) > 0 "diameter must be positive"
+        @assert ustrip(length) > 0 "length must be positive"
+        new{T}(diameter, length)
+    end
 end
 
 """
-    Tube(; diameter::Unitful.Length, length::Unitful.Length)
+    Helix{T<:Tube,V<:AbstractQuantity}
 
-Returns a Tube with the given tube diameter and length.
-
-# Keywords
-- `diameter::Unitful.Length`: the diameter of the tube
-- `length::Unitful.Length`: the length of the tube
-
-# Returns
-- `Tube`: the tube with the given diameter and length
-"""
-Tube(; diameter::Unitful.Length, length::Unitful.Length) = Tube(diameter, length)
-
-"""
-    Coil
-
-A tube in the shape of a coil with a diameter and pitch.
+A tube in the shape of a helix with a diameter and pitch.
 
 # Fields
-- `tube::Tube`: the tube that is coiled
-- `diameter::Unitful.Length`: the diameter of the coil
-- `pitch::Unitful.Length`: the pitch of the coil
+- `tube::T`: the tube that is coiled
+- `diameter::V`: the diameter of the coil
+- `pitch::V`: the pitch of the coil
 """
-struct Coil{T<:Tube,T1<:Unitful.Length,T2<:Unitful.Length} <: Structure
+struct Helix{T<:Tube,V<:AbstractQuantity} <: Structure
     tube::T
-    diameter::T1
-    pitch::T2
+    diameter::V
+    pitch::V
+
+    function Helix(t::T; diameter::V, pitch::V) where {T,V}
+        @assert dimension(diameter) == dimension(u"m") "diameter must have units of length"
+        @assert dimension(pitch) == dimension(u"m") "pitch must have units of length"
+        @assert ustrip(diameter) > 0 "diameter must be positive"
+        @assert ustrip(pitch) > 0 "pitch must be positive"
+        new{T,V}(t, diameter, pitch)
+    end
 end
 
 """
-    Coil(t::Tube; diameter::Unitful.Length, pitch::Unitful.Length)
-
-Returns a Coil with the given tube, diameter, and pitch.
-
-# Arguments
-- `t::Tube`: the tube that is coiled
-
-# Keywords
-- `diameter::Unitful.Length`: the diameter of the coil
-- `pitch::Unitful.Length`: the pitch of the coil
-
-# Returns
-- `Coil`: the coil with the given tube, diameter, and pitch
-"""
-Coil(t::Tube; diameter::Unitful.Length, pitch::Unitful.Length) = Coil(t, diameter, pitch)
-
-"""
-    Valve
+    Valve{T<:AbstractQuantity}
 
 A valve parametrized by a flow rate and flow factor.
 
 # Fields
-- `flow_rate::VolumeFlow`: the flow rate of the valve
-- `flow_factor::VolumeFlow`: the flow factor of the valve
+- `flow_rate::T`: the flow rate of the valve
+- `flow_factor::T`: the flow factor of the valve
 """
-struct Valve{T1<:VolumeFlow,T2<:VolumeFlow} <: Structure
-    flow_rate::T1
-    flow_factor::T2
+struct Valve{T<:AbstractQuantity} <: Structure
+    flow_rate::T
+    flow_factor::T
+
+    function Valve(; flow_rate::T, flow_factor::T) where {T}
+        @assert dimension(flow_rate) == dimension(u"m^3/s") "flow_rate must have units of volume per time"
+        @assert dimension(flow_factor) == dimension(u"m^3/s") "flow_factor must have units of volume per time"
+        @assert ustrip(flow_rate) > 0 "flow_rate must be positive"
+        @assert ustrip(flow_factor) > 0 "flow_factor must be positive"
+        new{T}(flow_rate, flow_factor)
+    end
 end
-
-"""
-    Valve(; flow_rate::VolumeFlow, flow_factor::VolumeFlow)
-
-Returns a Valve with the given flow rate and flow factor.
-
-# Keywords
-- `flow_rate::VolumeFlow`: the flow rate of the valve
-- `flow_factor::VolumeFlow`: the flow factor of the valve
-
-# Returns
-- `Valve`: the valve with the given flow rate and flow factor
-"""
-Valve(; flow_rate::VolumeFlow, flow_factor::VolumeFlow) = Valve(flow_rate, flow_factor)

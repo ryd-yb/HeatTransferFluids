@@ -1,72 +1,51 @@
 export Fluid, Water
 
 """
-    Fluid{
-        T1<:Unitful.Density,
-        T2<:Unitful.Velocity,
-        T3<:Unitful.DynamicViscosity,
-        T4<:SpecificHeatCapacity,
-        T5<:ThermalConductivity,
-        T6<:Unitful.Temperature,
-    }
+    Fluid{T<:AbstractQuantity}
 
 A fluid with the important physical properties to be used in heat transfer calculations.
 
 # Fields
-- `density::T1`: the density of the fluid
-- `velocity::T2`: the velocity of the fluid
-- `viscosity::T3`: the viscosity of the fluid
-- `heat_capacity::T4`: the specific heat capacity of the fluid
-- `thermal_conductivity::T5`: the thermal conductivity of the fluid
-- `temperature::T6`: the temperature of the fluid
+- `density::T`: the density of the fluid
+- `velocity::T`: the velocity of the fluid
+- `viscosity::T`: the viscosity of the fluid
+- `heat_capacity::T`: the specific heat capacity of the fluid
+- `thermal_conductivity::T`: the thermal conductivity of the fluid
+- `temperature::T`: the temperature of the fluid
 """
-struct Fluid{
-    T1<:Unitful.Density,
-    T2<:Unitful.Velocity,
-    T3<:Unitful.DynamicViscosity,
-    T4<:SpecificHeatCapacity,
-    T5<:ThermalConductivity,
-    T6<:Unitful.Temperature,
-}
-    density::T1
-    velocity::T2
-    viscosity::T3
-    heat_capacity::T4
-    thermal_conductivity::T5
-    temperature::T6
+struct Fluid{T<:AbstractQuantity}
+    density::T
+    velocity::T
+    viscosity::T
+    heat_capacity::T
+    thermal_conductivity::T
+    temperature::T
+
+    function Fluid(;
+        density::T,
+        velocity::T,
+        viscosity::T,
+        heat_capacity::T,
+        thermal_conductivity::T,
+        temperature::T,
+    ) where {T}
+        @assert dimension(density) == dimension(u"kg/m^3") "density must have units of mass per volume"
+        @assert dimension(velocity) == dimension(u"m/s") "velocity must have units of length per time"
+        @assert dimension(viscosity) == dimension(u"Pa*s") "viscosity must have units of pressure times time"
+        @assert dimension(heat_capacity) == dimension(u"J/(kg*K)") "heat_capacity must have units of energy per mass per temperature"
+        @assert dimension(thermal_conductivity) == dimension(u"W/(m*K)") "thermal_conductivity must have units of power per length per temperature"
+        @assert dimension(temperature) == dimension(u"K") "temperature must have units of temperature"
+        @assert ustrip(density) > 0 "density must be positive"
+        @assert ustrip(velocity) > 0 "velocity must be positive"
+        @assert ustrip(viscosity) > 0 "viscosity must be positive"
+        @assert ustrip(heat_capacity) > 0 "heat_capacity must be positive"
+        @assert ustrip(thermal_conductivity) > 0 "thermal_conductivity must be positive"
+        @assert ustrip(temperature) > 0 "temperature must be positive"
+
+        new{T}(density, velocity, viscosity, heat_capacity, thermal_conductivity, temperature)
+    end
+
 end
-
-"""
-    Fluid(
-        density::Unitful.Density,
-        velocity::Unitful.Velocity,
-        viscosity::Unitful.DynamicViscosity,
-        heat_capacity::SpecificHeatCapacity,
-        thermal_conductivity::ThermalConductivity,
-        temperature::Unitful.Temperature,
-    )
-
-Returns a Fluid with the given properties.
-
-# Keywords
-- `density::Unitful.Density`: the density of the fluid
-- `velocity::Unitful.Velocity`: the velocity of the fluid
-- `viscosity::Unitful.DynamicViscosity`: the viscosity of the fluid
-- `heat_capacity::SpecificHeatCapacity`: the specific heat capacity of the fluid
-- `thermal_conductivity::ThermalConductivity`: the thermal conductivity of the fluid
-- `temperature::Unitful.Temperature`: the temperature of the fluid
-
-# Returns
-- `Fluid`: the fluid with the given properties
-"""
-Fluid(;
-    density::Unitful.Density,
-    velocity::Unitful.Velocity,
-    viscosity::Unitful.DynamicViscosity,
-    heat_capacity::SpecificHeatCapacity,
-    thermal_conductivity::ThermalConductivity,
-    temperature::Unitful.Temperature,
-) = Fluid(density, velocity, viscosity, heat_capacity, thermal_conductivity, temperature)
 
 """
     Water
@@ -74,16 +53,16 @@ Fluid(;
 Returns a Fluid with the properties of water close to room temperature.
 
 # Keywords
-- `velocity::Unitful.Velocity`: the velocity of the water
-- `temperature::Unitful.Temperature`: the temperature of the water
+- `velocity::AbstractQuantity`: the velocity of the water
+- `temperature::AbstractQuantity`: the temperature of the water
 
 # Returns
 - `Fluid`: the fluid with the properties of water close to room temperature at the given velocity and temperature
 """
-Water(; velocity::Unitful.Velocity, temperature::Unitful.Temperature) = Fluid(
+Water(; velocity::AbstractQuantity, temperature::AbstractQuantity) = Fluid(
     density = 997u"kg/m^3",
     velocity = velocity,
-    viscosity = 1u"mPa*s",
+    viscosity = 1e-3u"Pa*s",
     heat_capacity = 4186u"J/(kg*K)",
     thermal_conductivity = 0.591u"W/(m*K)",
     temperature = temperature,

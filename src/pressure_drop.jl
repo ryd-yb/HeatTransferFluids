@@ -15,7 +15,7 @@ See VDI Heat Atlas, p. 1057 for details.
 - `friction::Float`: the friction factor of the fluid flowing through the tube
 
 # Returns
-- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
+- `DynamicQuantities.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
 """
 function pressure_drop(f::Fluid, t::Tube; friction = nothing)
     Re = reynolds_number(f, t)
@@ -30,7 +30,7 @@ function pressure_drop(f::Fluid, t::Tube; friction = nothing)
         ξ = friction
     end
 
-    return uconvert(u"bar", ξ * (L / d) * (ρ * u^2 / 2))
+    return uconvert(us"bar", ξ * (L / d) * (ρ * u^2 / 2))
 end
 
 """
@@ -45,14 +45,14 @@ See VDI Heat Atlas, p. 1062 to 1063 for details.
 - `c::Coil`: the coiled tube through which the fluid flows
 
 # Returns
-- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
 """
-function pressure_drop(f::Fluid, c::Coil)
-    Dw = c.diameter
-    H = c.pitch
+function pressure_drop(f::Fluid, h::Helix)
+    Dw = h.diameter
+    H = h.pitch
     D = Dw * (1 + (H / (π * Dw))^2)
-    d = c.tube.diameter
-    Re = reynolds_number(f, c.tube)
+    d = h.tube.diameter
+    Re = reynolds_number(f, h.tube)
 
     if (d / D)^(-2) < Re && Re < 2300
         ξ = (64 / Re) * (1 + 0.033(log10(Re * sqrt(d / D))))
@@ -60,7 +60,7 @@ function pressure_drop(f::Fluid, c::Coil)
         ξ = (0.3164 / Re^(1 / 4)) * (1 + 0.095sqrt(d / D) * Re^(1 / 4))
     end
 
-    return pressure_drop(f, c.tube, friction = ξ)
+    return pressure_drop(f, h.tube, friction = ξ)
 end
 
 """
@@ -73,12 +73,12 @@ Computes the pressure drop of a `fluid` flowing through a `valve`.
 - `v::Valve`: the valve through which the fluid flows
 
 # Returns
-- `Unitful.Quantity`: the pressure drop of the fluid flowing through the tube
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
 """
 # https://en.wikipedia.org/wiki/Flow_coefficient
 function pressure_drop(f::Fluid, v::Valve)
-    Q = uconvert(u"m^3/hr", v.flow_rate)
-    Kv = uconvert(u"m^3/hr", v.flow_factor)
+    Q = uconvert(us"m^3/hr", v.flow_rate)
+    Kv = uconvert(us"m^3/hr", v.flow_factor)
 
     ρ = f.density
     ρ₀ = 1000u"kg/m^3"
