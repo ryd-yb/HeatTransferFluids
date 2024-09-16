@@ -1,7 +1,7 @@
 name = "HeatTransferFluids"
 uuid = "44505bb3-94ea-493c-a20c-f0ca548ab76b"
 authors = ["Bodo Kaiser"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 DynamicQuantities = "06fc5a27-2a28-4c7c-a15d-362465fb6821"
