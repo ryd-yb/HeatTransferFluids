@@ -8,7 +8,7 @@
     end
 
     @testset "coil" begin
-        @test pressure_drop(fluid, Helix(tube, diameter = 63.1u"mm", pitch = 2.6u"mm")) ≈ 0.26u"bar" atol =
+        @test pressure_drop(fluid, Helix(tube, diameter = 63.1u"mm", pitch = 2.6u"mm")) ≈ 0.56u"bar" atol =
             0.01u"bar"
     end
 

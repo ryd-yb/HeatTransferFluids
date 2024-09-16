@@ -53,9 +53,9 @@ function critical_reynolds_number(f::Fluid, h::Helix)
     D = Dw * (1 + (H / (π * Dw))^2)
     d = h.tube.diameter
 
-    return ustrip (2300*(1+8.6*(d/D)^0.45))
+    return ustrip(2300 * (1 + 8.6 * (d / D)^0.45))
 end
-   
+
 function pressure_drop(f::Fluid, h::Helix)
     Dw = h.diameter
     H = h.pitch
@@ -64,7 +64,7 @@ function pressure_drop(f::Fluid, h::Helix)
     Re = reynolds_number(f, h.tube)
     Re_crit = critical_reynolds_number(f, h)
 
-    if 1<(Re*sqrt(d/D))<(Re_crit*sqrt(d/D))
+    if 1 < (Re * sqrt(d / D)) < (Re_crit * sqrt(d / D))
         ξ = (64 / Re) * (1 + 0.033(log10(Re * sqrt(d / D)))^4.0)
     else
         ξ = (0.3164 / Re^(1 / 4)) * (1 + 0.095sqrt(d / D) * Re^(1 / 4))
