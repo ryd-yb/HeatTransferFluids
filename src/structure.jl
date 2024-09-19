@@ -74,3 +74,19 @@ struct Valve{T<:AbstractQuantity} <: Structure
         new{T}(flow_rate, flow_factor)
     end
 end
+
+"""
+struct Rectangular_Coil{T<:Tube,V<:AbstractQuantity} <: Structure
+    tube::T
+    turns::V
+    friction::V
+
+    function Rectangular_Coil(t::T; turns::V, friction::V) where {T,V}
+        @assert dimension(turns) == dimension(u"") "turns must be dimensionless"
+        @assert dimension(friction) == dimension(u"") "friction must be dimensionless"
+        @assert ustrip(turns) > 0 "turns must be positive"
+        @assert ustrip(friction) > 0 "friction must be positive"
+        new{T,V}(t, turns, friction)
+    end
+
+"""
