@@ -74,6 +74,24 @@ function pressure_drop(f::Fluid, h::Helix)
 end
 
 """
+    function pressure_drop(f::Fluid, r::RectangularCoil; friction = nothing)
+        Re = reynolds_number(f, r)
+        L = r.length
+        d = r.diameter
+        ρ = r.density
+        u = r.velocity
+        ξb = r.friction
+        n = r.turns
+
+        ptube = pressure_drop(f, r.tube; friction = friction)
+        pbend = ξb*(ρ*u^2/2)
+        return ustrip(ptube + n*4*pbend)
+
+    end
+
+"""
+
+"""
     pressure_drop(f::Fluid, v::Valve)
 
 Computes the pressure drop of a `fluid` flowing through a `valve`.

@@ -5,8 +5,9 @@
 
     @testset "tube" begin
         @test pressure_drop(fluid, tube) ≈ 0.25u"bar" atol = 0.01u"bar"
+        @test pressure_drop(Water(velocity = 3u"m/s", temperature = 262.15u"K"), Tube(diameter = 5u"mm", length = 1u"m")) ≈ 0.25u"bar" atol = 0.3u"bar"
     end
-
+    
     @testset "coil" begin
         @test pressure_drop(fluid, Helix(tube, diameter = 63.1u"mm", pitch = 2.6u"mm")) ≈ 0.56u"bar" atol =
             0.01u"bar"
