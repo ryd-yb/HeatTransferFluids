@@ -98,11 +98,5 @@ So far, we only support 90-degree bends, see Spedding, P.L., Bernard, E. and McN
 function pressure_drop(f::Fluid, b::Bend)
     @assert b.angle == 90u"deg" "only 90-degree bends are supported at the moment"
 
-    De = dean_number(f, b)
-
-    ξ = nothing
-    if De >= 11.6 && De <= 2000
-        ϕ = 1 - (1 - (11.6 / De)^0.45)^(1 / 0.45)
-    end
-
+    return pressure_drop(f, b.tube; friction=friction(f, b))
 end

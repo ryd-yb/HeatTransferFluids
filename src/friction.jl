@@ -37,3 +37,27 @@ function friction(f::Fluid, t::Tube)
 
     throw(DomainError(Re, "no analytical formula for flow regime"))
 end
+
+function friction(f::Fluid, b::Bend)
+    De = dean_number(f, b)
+    ξ = friction(f, b.tube)
+
+    # laminar flow as in straight tube
+    if De < 11.6
+        return ξ
+    end
+    # laminar flow with additional friction
+    if De >= 11.6 && De <= 2000
+        return ξ / (1 - (1 - (11.6 / De)^0.45)^(1 / 0.45))
+    end
+
+    r = b.tube.diameter / 2
+    R = b.radius
+
+    # turbulent flow
+    Re_c = critical_reynolds_number(b.tube) * 7.5 * (r / R)^0.25
+    Re = reynolds_number(f, b.tube)
+    if Re > Re_c
+        return (r/R)^0.5 * (0.003625 + 0.038*(Re*(r/R)^2)^-0.25)
+    end
+end
