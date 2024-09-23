@@ -15,4 +15,8 @@
         @test nusselt_number(fluid, tube) ≈ 5 atol = 1
     end
 
+    @testset "dean_number" begin
+        @test dean_number(fluid, Elbow(tube, radius = 10u"mm")) ≈ 1561 * √(2.7 / 20) atol = 1
+    end
+
 end

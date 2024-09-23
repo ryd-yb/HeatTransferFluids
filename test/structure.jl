@@ -25,4 +25,16 @@
         @test_throws AssertionError Valve(flow_rate = 10u"L/hr", flow_factor = 1.5u"m^2/hr")
     end
 
+    @testset "Bend" begin
+        t = Elbow(tube, radius = 10u"mm")
+        @test t.tube == tube
+        @test t.radius == 10u"mm"
+        @test t.angle == 90u"deg"
+
+        @test_throws AssertionError Elbow(tube, radius = 0u"mm")
+        @test_throws AssertionError Elbow(tube, radius = -10u"mm")
+        @test_throws AssertionError Bend(tube, radius = 10u"m", angle = 0u"deg")
+        @test_throws AssertionError Bend(tube, radius = 10u"m", angle = 180u"deg")
+    end
+
 end

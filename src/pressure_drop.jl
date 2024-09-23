@@ -34,20 +34,19 @@ function pressure_drop(f::Fluid, t::Tube; friction = nothing)
 end
 
 """
-    pressure_drop(f::Fluid, c::Coil)
+    pressure_drop(h::Helix)
 
-Computes the pressure drop of a `fluid` flowing through a coiled tube.
+Computes the critical Reynolds number for a Helix.
 
 See VDI Heat Atlas, p. 1062 to 1063 for details.
 
 # Arguments
-- `f::Fluid`: the fluid flowing through the tube
-- `c::Coil`: the coiled tube through which the fluid flows
+- `h::Helix`: the coiled tube through which the fluid flows
 
 # Returns
 - `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
 """
-function critical_reynolds_number(f::Fluid, h::Helix)
+function critical_reynolds_number(h::Helix)
     Dw = h.diameter
     H = h.pitch
     D = Dw * (1 + (H / (π * Dw))^2)
@@ -56,13 +55,25 @@ function critical_reynolds_number(f::Fluid, h::Helix)
     return ustrip(2300 * (1 + 8.6 * (d / D)^0.45))
 end
 
+"""
+    pressure_drop(f::Fluid, h::Helix)
+
+Computes the pressure drop of a `fluid` flowing through a `helix`.
+
+# Arguments
+- `f::Fluid`: the fluid flowing through the tube
+- `h::Helix`: the helix through which the fluid flows
+
+# Returns
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
+"""
 function pressure_drop(f::Fluid, h::Helix)
     Dw = h.diameter
     H = h.pitch
     D = Dw * (1 + (H / (π * Dw))^2)
     d = h.tube.diameter
     Re = reynolds_number(f, h.tube)
-    Re_crit = critical_reynolds_number(f, h)
+    Re_crit = critical_reynolds_number(h)
 
     if 1 < (Re * sqrt(d / D)) < (Re_crit * sqrt(d / D))
         ξ = (64 / Re) * (1 + 0.033(log10(Re * sqrt(d / D)))^4.0)
@@ -72,24 +83,6 @@ function pressure_drop(f::Fluid, h::Helix)
 
     return pressure_drop(f, h.tube, friction = ξ)
 end
-
-"""
-    function pressure_drop(f::Fluid, r::RectangularCoil; friction = nothing)
-        Re = reynolds_number(f, r)
-        L = r.length
-        d = r.diameter
-        ρ = r.density
-        u = r.velocity
-        ξb = r.friction
-        n = r.turns
-
-        ptube = pressure_drop(f, r.tube; friction = friction)
-        pbend = ξb*(ρ*u^2/2)
-        return ustrip(ptube + n*4*pbend)
-
-    end
-
-"""
 
 """
     pressure_drop(f::Fluid, v::Valve)
@@ -113,4 +106,30 @@ function pressure_drop(f::Fluid, v::Valve)
     p₀ = 1u"bar"
 
     return p₀ * (Q / Kv)^2 * ρ / ρ₀
+end
+
+"""
+    pressure_drop(f::Fluid, b::Bend)
+
+Computes the pressure drop of a `fluid` flowing through a `bend`.
+
+So far, we only support 90-degree bends, see Spedding, P.L., Bernard, E. and McNally, G.M., ‘Fluid ﬂow through 90 degree bends’, Dev. Chem. Eng Mineral Process, 12: 107–128, 2004.
+
+# Arguments
+- `f::Fluid`: the fluid flowing through the tube
+- `b::Bend`: the valve through which the fluid flows
+
+# Returns
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
+"""
+function pressure_drop(f::Fluid, b::Bend)
+    @assert b.angle == 90u"deg" "only 90-degree bends are supported at the moment"
+
+    De = dean_number(f, b)
+
+    ξ = nothing
+    if De >= 11.6 && De <= 2000
+        ϕ = 1 - (1 - (11.6 / De)^0.45)^(1 / 0.45)
+    end
+
 end

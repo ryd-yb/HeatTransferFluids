@@ -1,4 +1,4 @@
-export reynolds_number, nusselt_number, prandtl_number
+export reynolds_number, nusselt_number, prandtl_number, dean_number
 
 """
     reynolds_number(f::Fluid, t::Tube)
@@ -85,4 +85,13 @@ function nusselt_number_turbulent(f::Fluid, t::Tube)
     ξ = (1.8log10(Re) - 1.5)^(-2)
 
     return ((ξ / 8)Re * Pr) * (1 + λ^(2 / 3)) / (1 + 12.7(ξ / 8)^(1 / 2) * (Pr^(2 / 3) - 1))
+end
+
+function dean_number(f::Fluid, b::Bend)
+    Re = reynolds_number(f, b.tube)
+
+    d = b.tube.diameter
+    D = 2 * b.radius
+
+    return Re * √(d / D)
 end
