@@ -21,6 +21,32 @@ function reynolds_number(f::Fluid, t::Tube)
     return ustrip(ϱ * v * D / μ)
 end
 
+function critical_reynolds_number(t::Tube)
+    return 2300
+end
+
+"""
+    pressure_drop(h::Helix)
+
+Computes the critical Reynolds number for a Helix.
+
+See VDI Heat Atlas, p. 1062 to 1063 for details.
+
+# Arguments
+- `h::Helix`: the coiled tube through which the fluid flows
+
+# Returns
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
+"""
+function critical_reynolds_number(h::Helix)
+    Dw = h.diameter
+    H = h.pitch
+    D = Dw * (1 + (H / (π * Dw))^2)
+    d = h.tube.diameter
+
+    return ustrip(2300 * (1 + 8.6 * (d / D)^0.45))
+end
+
 """
     prandtl_number(f::Fluid)
 

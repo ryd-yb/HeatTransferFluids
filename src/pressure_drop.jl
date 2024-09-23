@@ -17,42 +17,15 @@ See VDI Heat Atlas, p. 1057 for details.
 # Returns
 - `DynamicQuantities.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
 """
-function pressure_drop(f::Fluid, t::Tube; friction = nothing)
+function pressure_drop(f::Fluid, t::Tube; friction = friction(f,t))
     Re = reynolds_number(f, t)
     L = t.length
     d = t.diameter
     ρ = f.density
     u = f.velocity
-
-    if friction === nothing
-        ξ = 64 / Re
-    else
-        ξ = friction
-    end
+    ξ = friction
 
     return uconvert(us"bar", ξ * (L / d) * (ρ * u^2 / 2))
-end
-
-"""
-    pressure_drop(h::Helix)
-
-Computes the critical Reynolds number for a Helix.
-
-See VDI Heat Atlas, p. 1062 to 1063 for details.
-
-# Arguments
-- `h::Helix`: the coiled tube through which the fluid flows
-
-# Returns
-- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
-"""
-function critical_reynolds_number(h::Helix)
-    Dw = h.diameter
-    H = h.pitch
-    D = Dw * (1 + (H / (π * Dw))^2)
-    d = h.tube.diameter
-
-    return ustrip(2300 * (1 + 8.6 * (d / D)^0.45))
 end
 
 """
