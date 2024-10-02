@@ -1,4 +1,4 @@
-export Structure, Tube, Helix, Valve
+export Structure, Tube, Helix, Valve, Bend, Elbow
 
 """
     Structure
@@ -75,18 +75,19 @@ struct Valve{T<:AbstractQuantity} <: Structure
     end
 end
 
-"""
-struct Rectangular_Coil{T<:Tube,V<:AbstractQuantity} <: Structure
-    tube::T
-    turns::V
-    friction::V
+struct Bend{T<:AbstractQuantity} <: Structure
+    tube::Tube
+    radius::T
+    angle::T
 
-    function Rectangular_Coil(t::T; turns::V, friction::V) where {T,V}
-        @assert dimension(turns) == dimension(u"") "turns must be dimensionless"
-        @assert dimension(friction) == dimension(u"") "friction must be dimensionless"
-        @assert ustrip(turns) > 0 "turns must be positive"
-        @assert ustrip(friction) > 0 "friction must be positive"
-        new{T,V}(t, turns, friction)
+    function Bend(tube::Tube; radius::T, angle::T) where {T}
+        @assert dimension(radius) == dimension(u"m") "radius must have units of length"
+        @assert dimension(angle) == dimension(u"rad") "angle must have units of angle"
+        @assert ustrip(radius) > 0 "radius must be positive"
+        @assert angle > 0u"deg" "angle must be positive"
+        @assert angle < 180u"deg" "angle must be less than 180 degrees"
+        new{T}(tube, radius, angle)
     end
+end
 
-"""
+Elbow(tube::Tube; radius::AbstractQuantity) = Bend(tube, radius = radius, angle = π / 2u"rad")

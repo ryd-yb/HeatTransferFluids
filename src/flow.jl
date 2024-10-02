@@ -1,4 +1,4 @@
-export reynolds_number, nusselt_number, prandtl_number
+export reynolds_number, nusselt_number, prandtl_number, dean_number
 
 """
     reynolds_number(f::Fluid, t::Tube)
@@ -19,6 +19,32 @@ function reynolds_number(f::Fluid, t::Tube)
     D = t.diameter
 
     return ustrip(ϱ * v * D / μ)
+end
+
+function critical_reynolds_number(t::Tube)
+    return 2300
+end
+
+"""
+    pressure_drop(h::Helix)
+
+Computes the critical Reynolds number for a Helix.
+
+See VDI Heat Atlas, p. 1062 to 1063 for details.
+
+# Arguments
+- `h::Helix`: the coiled tube through which the fluid flows
+
+# Returns
+- `DynamicQuantity.AbstractQuantity`: the pressure drop of the fluid flowing through the tube
+"""
+function critical_reynolds_number(h::Helix)
+    Dw = h.diameter
+    H = h.pitch
+    D = Dw * (1 + (H / (π * Dw))^2)
+    d = h.tube.diameter
+
+    return ustrip(2300 * (1 + 8.6 * (d / D)^0.45))
 end
 
 """
@@ -85,4 +111,13 @@ function nusselt_number_turbulent(f::Fluid, t::Tube)
     ξ = (1.8log10(Re) - 1.5)^(-2)
 
     return ((ξ / 8)Re * Pr) * (1 + λ^(2 / 3)) / (1 + 12.7(ξ / 8)^(1 / 2) * (Pr^(2 / 3) - 1))
+end
+
+function dean_number(f::Fluid, b::Bend)
+    Re = reynolds_number(f, b.tube)
+
+    d = b.tube.diameter
+    D = 2 * b.radius
+
+    return Re * √(d / D)
 end
