@@ -58,6 +58,8 @@ function friction(f::Fluid, b::Bend)
     Re_c = critical_reynolds_number(b.tube) * 7.5 * (r / R)^0.25
     Re = reynolds_number(f, b.tube)
     if Re > Re_c
-        return (r/R)^0.5 * (0.003625 + 0.038*(Re*(r/R)^2)^-0.25)
+        return (r / R)^0.5 * (0.003625 + 0.038 * (Re * (r / R)^2)^-0.25)
     end
+
+    throw(DomainError(De, "no analytical formula for flow regime"))
 end
